@@ -1,26 +1,24 @@
 # 🎵 Content-Based Music Recommender System
 
-This project is a content-based music recommender system built using Python, Scikit-learn, and Streamlit. It recommends songs that are similar to a selected track by analyzing Spotify audio features such as danceability, energy, tempo, valence, and genre.
+A content-based music recommender system built with Python, Scikit-learn, and Streamlit. It recommends songs similar to a selected track by analyzing Spotify audio features such as danceability, energy, tempo, valence, and genre. The app integrates the Spotify API to display album artwork and direct Spotify links.
 
-To make the recommendations more interactive, the application also integrates the Spotify API to display album artwork, preview clips, and direct Spotify links.
-
-🔗 **Live Demo:** Coming Soon
+🔗 **Live Demo:** https://music-recom-system.streamlit.app/
 
 ---
 
 ## Demo
 
-![Demo](demo.gif)
+![Application Demo](image.png)
 
 ---
 
 ## Features
 
-- Recommend songs based on audio characteristics using **Cosine Similarity**.
-- Interactive web application built with **Streamlit**.
-- Fetch album artwork, Spotify links, and 30-second previews using the **Spotify API**.
-- Feature engineering using normalized audio features and one-hot encoded genres.
-- Computes similarity only for the selected song, avoiding the need to store a huge similarity matrix.
+- Recommends songs based on audio characteristics using **Cosine Similarity**
+- Interactive web application built with **Streamlit**
+- Fetches album artwork and Spotify links using the **Spotify API**
+- Feature engineering using normalized audio features and one-hot encoded genres
+- Computes similarity only for the selected song — no need to store an 81K × 81K matrix
 
 ---
 
@@ -28,7 +26,7 @@ To make the recommendations more interactive, the application also integrates th
 
 | Category | Tools |
 |----------|-------|
-| Programming Language | Python |
+| Programming Language | Python 3.9+ |
 | Machine Learning | Scikit-learn |
 | Data Processing | Pandas, NumPy |
 | Frontend | Streamlit |
@@ -48,7 +46,7 @@ music_recommender_system/
 │── requirements.txt
 │── README.md
 │── demo.gif
-│── .env                   # Spotify credentials (not uploaded)
+│── .env                   # Spotify credentials (not uploaded to version control)
 ```
 
 ---
@@ -71,43 +69,49 @@ Each song includes audio features such as:
 - Popularity
 - Genre
 
-After removing duplicate songs and cleaning the data, the recommendation engine works with approximately **81,000 unique tracks**.
+After removing duplicates and cleaning the data, the recommendation engine works with approximately **81,000 unique tracks**.
+
+---
+
+## Prerequisites
+
+- Python 3.9 or higher
+- A [Spotify Developer account](https://developer.spotify.com/) to obtain API credentials
 
 ---
 
 ## Installation
 
-Clone the repository
+**Clone the repository**
 
 ```bash
 git clone https://github.com/KGaurav1207/music_recommender_system.git
-
 cd music_recommender_system
 ```
 
-Create a virtual environment
+**Create a virtual environment**
 
 ```bash
 python3 -m venv venv
-
-source venv/bin/activate
+source venv/bin/activate       # On Windows: venv\Scripts\activate
 ```
 
-Install the required packages
+**Install the required packages**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file
+**Create a `.env` file** in the project root with your Spotify credentials:
 
 ```text
 SPOTIFY_CLIENT_ID=your_client_id
-
 SPOTIFY_CLIENT_SECRET=your_client_secret
 ```
 
-Run the application
+> To get these credentials, create an app at [developer.spotify.com](https://developer.spotify.com/dashboard). Set any redirect URI (e.g. `http://localhost:8501`) when prompted.
+
+**Run the application**
 
 ```bash
 streamlit run app.py
@@ -120,29 +124,33 @@ streamlit run app.py
 1. The dataset is cleaned by removing duplicate songs and handling missing values.
 2. Numerical audio features are normalized using **MinMaxScaler**.
 3. Song genres are converted into numerical form using **One-Hot Encoding**.
-4. The processed features are combined into a feature matrix representing each song.
-5. When a user selects a song, the system computes cosine similarity between the selected song and all other songs.
-6. The most similar songs are ranked and displayed along with album artwork, preview audio, and Spotify links.
+4. The processed features are combined into a single feature matrix (81K rows × N features).
+5. When a user selects a song, the system computes cosine similarity between that song and all others on the fly.
+6. The most similar songs are ranked and displayed with album artwork and Spotify links.
 
 ---
 
 ## Challenges Faced
 
-While building this project, I encountered a few practical challenges:
-
-- Computing an 81K × 81K similarity matrix required more than **50 GB of memory**, so I switched to computing cosine similarity only for the selected song.
-- Multiple songs in the dataset shared the same title (for example, *Believer*), so artist-based filtering was added to improve recommendation accuracy.
-- Balancing audio features and one-hot encoded genres required careful feature engineering to produce meaningful recommendations.
+- **Memory constraints:** Computing an 81K × 81K similarity matrix requires over 50 GB of memory. Switched to on-demand computation — similarity is calculated only for the selected song.
+- **Duplicate song titles:** Many tracks in the dataset share the same name (e.g. *Believer*). Added artist-based filtering to improve recommendation accuracy.
+- **Feature balancing:** Combining continuous audio features with one-hot encoded genres required careful normalization to avoid any single feature dominating the similarity score.
 
 ---
 
 ## Future Improvements
 
-- Hybrid recommendation system
-- Playlist recommendation
+- Hybrid recommendation system combining content-based and collaborative filtering
+- Playlist-level recommendations
 - Fuzzy search for song names
-- Personalized recommendations
-- Collaborative filtering
+- Personalized recommendations based on listening history
+- User accounts and saved preferences
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
